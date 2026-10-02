@@ -3,13 +3,15 @@
 ![Status: experimental](https://img.shields.io/badge/status-experimental-orange)
 ![POC version: v0.1.0](https://img.shields.io/badge/POC-v0.1.0-10B981)
 ![Target: ThoxMini and iOS](https://img.shields.io/badge/target-ThoxMini_%2B_iOS-10B981)
-![Validation: local and bench](https://img.shields.io/badge/validation-local_%2B_bench-64748B)
+![Validation: software passed, hardware pending](https://img.shields.io/badge/validation-software_passed%3B_hardware_pending-64748B)
 
 An experimental fork of [libimobiledevice/usbmuxd](https://github.com/libimobiledevice/usbmuxd) with a THOX companion prototype under [`poc/`](poc/). It explores a wired workflow in which ThoxOS on iOS submits work to ThoxMini and retrieves persistent results.
 
 **Delivery scope:** a Linux/Python connection agent, authenticated and encrypted application protocol, SQLite job storage, and a standalone SwiftUI iOS companion source project. The initial workload reports deterministic text statistics and a SHA-256 digest. An optional operator-configured local OpenAI-compatible endpoint can provide real inference when separately installed and qualified.
 
-**Validation boundary:** local software checks do not prove USB connectivity, iOS compilation, phone compatibility, or model performance. Signed iOS distribution, TestFlight upload, and integration into the existing ThoxOS application are separate milestones. Track physical-device evidence in the [bench checklist](poc/docs/BENCH_VALIDATION.md).
+**Verified:** 34 Python tests, 11 native Swift tests, the Python CLI reconnect demo, and an unsigned iOS simulator build passed. See [recorded validation](poc/VALIDATION.md) for the tested commit and environment. Physical USB connectivity, phone compatibility, signed distribution, model performance, and existing ThoxOS integration remain unqualified.
+
+**Continue the work:** [agent handoff hub](poc/handoffs/START_HERE.md) provides six assignments, kickoff prompts, owned paths, dependencies, and acceptance gates. The [task graph](poc/handoffs/tasks.json) tracks the remaining work; the [bench checklist](poc/docs/BENCH_VALIDATION.md) defines real-device evidence.
 
 ## Connection direction
 
@@ -119,12 +121,15 @@ not exercise usbmuxd, a phone, or a model. Then run the automated suite:
 PYTHONPATH=poc/host python3 -m unittest discover -s poc/tests -v
 ```
 
-Local tests and build checks are run by an operator; this fork adds no GitHub Actions workflow. A test result must record the command, environment, and tested commit. See [handoff](poc/docs/HANDOFF.md) for the remaining release gates.
+Local tests and build checks are run by an operator; GitHub Actions is disabled for this fork. A test result must record the command, environment, and tested commit. See [validation](poc/VALIDATION.md) for completed checks and [agent handoffs](poc/handoffs/START_HERE.md) for the remaining release gates.
 
 ## Project map
 
 | Resource | Purpose |
 |---|---|
+| [`poc/handoffs/START_HERE.md`](poc/handoffs/START_HERE.md) | Coordinator instructions and six agent assignments |
+| [`poc/handoffs/tasks.json`](poc/handoffs/tasks.json) | Machine-readable ownership, priorities and dependencies |
+| [`poc/VALIDATION.md`](poc/VALIDATION.md) | Actual test/build outcomes and remaining limits |
 | [`poc/PROTOCOL.md`](poc/PROTOCOL.md) | Framing, authentication, encryption, job operations |
 | [`poc/ios/`](poc/ios/) | Standalone iOS source project and native build details |
 | [`poc/docs/ARCHITECTURE.md`](poc/docs/ARCHITECTURE.md) | System boundaries, hardware roles, iOS constraints |

@@ -2,6 +2,8 @@
 
 This fork adds a bounded USB connectivity POC to upstream usbmuxd. The intended user action is: open the iOS companion, connect a qualified Mini, submit text, and retrieve the result even after the link is interrupted.
 
+Start with the [agent handoff hub](../handoffs/START_HERE.md) for six role-specific assignments and the [validation record](../VALIDATION.md) for completed software checks. This document supplies general operating guidance.
+
 ## Repository ownership boundaries
 
 - Upstream daemon code retains its original project structure, documentation, and licenses.

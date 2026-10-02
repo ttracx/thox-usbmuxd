@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "repository": "ttracx/thox-usbmuxd",
+  "branch": "master",
+  "implemented_baseline": "af3372806f01a572f08105552f6072af0a2c4de2",
+  "updated": "2026-10-02",
+  "score_formula": "market_value*0.4 + feasibility*0.3 + time_to_market*0.2 + strategic_importance*0.1; favorable 1-5; dependencies override score",
+  "tasks": [
+    {
+      "id": "IOS-01",
+      "role": "ios",
+      "handoff": "01_ios_companion.md",
+      "status": "ready",
+      "owner": null,
+      "branch": null,
+      "depends_on": [],
+      "scores": {
+        "market_value": 5,
+        "feasibility": 5,
+        "time_to_market": 4,
+        "strategic_importance": 5
+      },
+      "priority": 4.8,
+      "evidence": []
+    },
+    {
+      "id": "MINI-01",
+      "role": "mini_firmware",
+      "handoff": "02_mini_host_firmware.md",
+      "status": "ready",
+      "owner": null,
+      "branch": null,
+      "depends_on": [],
+      "scores": {
+        "market_value": 5,
+        "feasibility": 4,
+        "time_to_market": 4,
+        "strategic_importance": 5
+      },
+      "priority": 4.5,
+      "evidence": []
+    },
+    {
+      "id": "SEC-01",
+      "role": "security_protocol",
+      "handoff": "04_security_protocol.md",
+      "status": "ready",
+      "owner": null,
+      "branch": null,
+      "depends_on": [],
+      "scores": {
+        "market_value": 5,
+        "feasibility": 4,
+        "time_to_market": 4,
+        "strategic_importance": 5
+      },
+      "priority": 4.5,
+      "evidence": []
+    },
+    {
+      "id": "INT-01",
+      "role": "thoxos_integration",
+      "handoff": "03_thoxos_integration.md",
+      "status": "ready",
+      "owner": null,
+      "branch": null,
+      "depends_on": [],
+      "scores": {
+        "market_value": 5,
+        "feasibility": 4,
+        "time_to_market": 4,
+        "strategic_importance": 5
+      },
+      "priority": 4.5,
+      "evidence": [],
+      "completion_requires": [
+        "IOS-01"
+      ],
+      "ready_scope": "Discover the private destination and plan owned adapter paths; consume the qualified iOS revision before final integration acceptance."
+    },
+    {
+      "id": "QA-01",
+      "role": "qa_release",
+      "handoff": "05_qa_release.md",
+      "status": "ready",
+      "owner": null,
+      "branch": null,
+      "depends_on": [],
+      "scores": {
+        "market_value": 5,
+        "feasibility": 4,
+        "time_to_market": 3,
+        "strategic_importance": 5
+      },
+      "priority": 4.3,
+      "evidence": [],
+      "completion_requires": [
+        "IOS-01",
+        "MINI-01",
+        "SEC-01",
+        "INT-01"
+      ],
+      "ready_scope": "Run live Python-to-Swift software interoperability now; hardware and distribution evidence follow component, integration and security gates."
+    },
+    {
+      "id": "NET-01",
+      "role": "transport_roadmap",
+      "handoff": "06_transport_thoxkey_roadmap.md",
+      "status": "ready",
+      "owner": null,
+      "branch": null,
+      "depends_on": [],
+      "scores": {
+        "market_value": 4,
+        "feasibility": 4,
+        "time_to_market": 3,
+        "strategic_importance": 4
+      },
+      "priority": 3.8,
+      "evidence": []
+    },
+    {
+      "id": "KEY-01",
+      "role": "thoxkey_roadmap",
+      "handoff": "06_transport_thoxkey_roadmap.md",
+      "status": "ready",
+      "owner": null,
+      "branch": null,
+      "depends_on": [],
+      "scores": {
+        "market_value": 4,
+        "feasibility": 3,
+        "time_to_market": 3,
+        "strategic_importance": 4
+      },
+      "priority": 3.5,
+      "evidence": []
+    }
+  ],
+  "dependency_semantics": {
+    "depends_on": "Must complete before starting the task.",
+    "completion_requires": "May start ready_scope now; these tasks must complete before final acceptance."
+  }
+}
