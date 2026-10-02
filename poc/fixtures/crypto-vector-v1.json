@@ -1,0 +1,11 @@
+{
+  "pair_key": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=",
+  "client_nonce": "ICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj8=",
+  "server_nonce": "QEFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaW1xdXl8=",
+  "client_key": "qpv1GJaCfuMq60WAgsOYr8jwczetv8pOTWNqfol0hRg=",
+  "server_key": "2jaZzHNBSXcpEvWcDbg0mPD8sDR/ajWhk+fwMO7TeA8=",
+  "server_proof": "WV7+QBN3mDafFleeoYe5z4+2W0Zxe+LBEc30RPBLo20=",
+  "client_proof": "SkLJ8NcVedOQcM86OPh40aLIMDd1+LomLqDJHGGLbxg=",
+  "server_seq0_plaintext": "{\"type\":\"ready\",\"version\":1}",
+  "server_seq0_ciphertext": "s9ssGz479MY5eneudEPpCxFyM+HhHYLeMJucoHiqdU1hzl2ks3Y6LmdUZgU="
+}

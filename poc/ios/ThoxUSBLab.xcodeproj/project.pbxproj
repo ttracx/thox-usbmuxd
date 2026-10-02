@@ -1,0 +1,37 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+		A5A17A7B8CC80F75708AEEA4 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThoxUSBLab/App/ThoxUSBLabApp.swift"; sourceTree = "<group>"; };
+		7B3E649DD90479A1182AAB0A = { isa = PBXBuildFile; fileRef = A5A17A7B8CC80F75708AEEA4; };
+		743C1BCD429B3F745E510F4B = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThoxUSBLab/Models/LabModel.swift"; sourceTree = "<group>"; };
+		AFC613C6B5BD55A1DBA99162 = { isa = PBXBuildFile; fileRef = 743C1BCD429B3F745E510F4B; };
+		9EA462A77EA6E3271DBF5082 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThoxUSBLab/Services/USBListener.swift"; sourceTree = "<group>"; };
+		162D8D6F4083CAC4B96E3159 = { isa = PBXBuildFile; fileRef = 9EA462A77EA6E3271DBF5082; };
+		A65A4168B76690500D84384B = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThoxUSBLab/Stores/PairingKeyStore.swift"; sourceTree = "<group>"; };
+		5127FF7E014062CB5BE1F5E8 = { isa = PBXBuildFile; fileRef = A65A4168B76690500D84384B; };
+		9D037E08D21377BEC5423E91 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThoxUSBLab/Views/ContentView.swift"; sourceTree = "<group>"; };
+		386162D835BA3E461F793A7F = { isa = PBXBuildFile; fileRef = 9D037E08D21377BEC5423E91; };
+		BC4A71180870F7945155FBB0 = { isa = XCLocalSwiftPackageReference; relativePath = "."; };
+		ED3DC570B697046E1D6DC405 = { isa = XCSwiftPackageProductDependency; package = BC4A71180870F7945155FBB0; productName = THOXWire; };
+		BBE189F87790362F4781096F = { isa = PBXBuildFile; productRef = ED3DC570B697046E1D6DC405; };
+		A8792157CB4F27FB949C035F = { isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ThoxUSBLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A3E27B8CA818264D75C8D81 = { isa = PBXGroup; children = (A8792157CB4F27FB949C035F,); name = Products; sourceTree = "<group>"; };
+		1455444174429298B0F374B3 = { isa = PBXGroup; children = (A5A17A7B8CC80F75708AEEA4,743C1BCD429B3F745E510F4B,9EA462A77EA6E3271DBF5082,A65A4168B76690500D84384B,9D037E08D21377BEC5423E91,); name = Sources; sourceTree = "<group>"; };
+		19F479106CE8C3BA8C106518 = { isa = PBXGroup; children = (1455444174429298B0F374B3, 0A3E27B8CA818264D75C8D81,); sourceTree = "<group>"; };
+		D626F04DF571B9BB2451CBFE = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (7B3E649DD90479A1182AAB0A,AFC613C6B5BD55A1DBA99162,162D8D6F4083CAC4B96E3159,5127FF7E014062CB5BE1F5E8,386162D835BA3E461F793A7F,); runOnlyForDeploymentPostprocessing = 0; };
+		8A7588AD5FA397C62F95C6FE = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (BBE189F87790362F4781096F,); runOnlyForDeploymentPostprocessing = 0; };
+		5C2473E515024614E403B8B9 = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		5DF0EAF287A59303D4EFEAF3 = { isa = XCBuildConfiguration; buildSettings = { CLANG_ENABLE_MODULES = YES; IPHONEOS_DEPLOYMENT_TARGET = 17.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; }; name = Debug; };
+		B8EB4DC6EE71CC2FBFD201B8 = { isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_STYLE = "Automatic"; DEVELOPMENT_TEAM = "DVJ6Z5343U"; CURRENT_PROJECT_VERSION = "1"; MARKETING_VERSION = "0.1.0"; PRODUCT_BUNDLE_IDENTIFIER = "ai.thox.thoxos.usblab"; PRODUCT_NAME = "$(TARGET_NAME)"; GENERATE_INFOPLIST_FILE = "YES"; INFOPLIST_KEY_CFBundleDisplayName = "ThoxOS USB Lab"; INFOPLIST_KEY_UILaunchScreen_Generation = "YES"; INFOPLIST_KEY_UIApplicationSceneManifest_Generation = "YES"; INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = "YES"; INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Connect to your paired THOX device for explicitly selected document tasks."; TARGETED_DEVICE_FAMILY = "1,2"; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SWIFT_VERSION = "5.0"; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; IPHONEOS_DEPLOYMENT_TARGET = "17.0"; ENABLE_PREVIEWS = "YES"; SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)"; }; name = Debug; };
+		C62D9534737287C44FD6EF43 = { isa = XCBuildConfiguration; buildSettings = { CLANG_ENABLE_MODULES = YES; IPHONEOS_DEPLOYMENT_TARGET = 17.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; }; name = Release; };
+		2EF9ECCD715FED9D8FF379BE = { isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_STYLE = "Automatic"; DEVELOPMENT_TEAM = "DVJ6Z5343U"; CURRENT_PROJECT_VERSION = "1"; MARKETING_VERSION = "0.1.0"; PRODUCT_BUNDLE_IDENTIFIER = "ai.thox.thoxos.usblab"; PRODUCT_NAME = "$(TARGET_NAME)"; GENERATE_INFOPLIST_FILE = "YES"; INFOPLIST_KEY_CFBundleDisplayName = "ThoxOS USB Lab"; INFOPLIST_KEY_UILaunchScreen_Generation = "YES"; INFOPLIST_KEY_UIApplicationSceneManifest_Generation = "YES"; INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = "YES"; INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Connect to your paired THOX device for explicitly selected document tasks."; TARGETED_DEVICE_FAMILY = "1,2"; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SWIFT_VERSION = "5.0"; SWIFT_OPTIMIZATION_LEVEL = "-O"; IPHONEOS_DEPLOYMENT_TARGET = "17.0"; ENABLE_PREVIEWS = "YES"; }; name = Release; };
+		7ED5184A5487DF185E3420D0 = { isa = XCConfigurationList; buildConfigurations = (5DF0EAF287A59303D4EFEAF3,C62D9534737287C44FD6EF43,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		82A58AF6F77EDCFC78A65DA6 = { isa = XCConfigurationList; buildConfigurations = (B8EB4DC6EE71CC2FBFD201B8,2EF9ECCD715FED9D8FF379BE,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		34A04005BCAF206EEC990BD9 = { isa = PBXNativeTarget; buildConfigurationList = 82A58AF6F77EDCFC78A65DA6; buildPhases = (D626F04DF571B9BB2451CBFE, 8A7588AD5FA397C62F95C6FE, 5C2473E515024614E403B8B9,); buildRules = (); dependencies = (); name = ThoxUSBLab; packageProductDependencies = (ED3DC570B697046E1D6DC405,); productName = ThoxUSBLab; productReference = A8792157CB4F27FB949C035F; productType = "com.apple.product-type.application"; };
+		244210E48437B6556980A702 = { isa = PBXProject; attributes = { BuildIndependentTargetsInParallel = 1; LastUpgradeCheck = 1600; }; buildConfigurationList = 7ED5184A5487DF185E3420D0; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base,); mainGroup = 19F479106CE8C3BA8C106518; packageReferences = (BC4A71180870F7945155FBB0,); productRefGroup = 0A3E27B8CA818264D75C8D81; projectDirPath = ""; projectRoot = ""; targets = (34A04005BCAF206EEC990BD9,); };
+	};
+	rootObject = 244210E48437B6556980A702;
+}

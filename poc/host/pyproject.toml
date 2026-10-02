@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "thox-usbmuxd-poc"
+version = "0.1.0"
+description = "Experimental ThoxMini to ThoxOS iOS authenticated USB bridge"
+requires-python = ">=3.10"
+license = {text = "GPL-3.0-or-later"}
+dependencies = ["cryptography==46.0.0"]
+
+[project.scripts]
+thox-usb = "thox_usb.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["thox_usb*"]

@@ -1,0 +1,40 @@
+name: ThoxUSBLab
+options:
+  bundleIdPrefix: ai.thox.thoxos
+  deploymentTarget:
+    iOS: "17.0"
+packages:
+  THOXWire:
+    path: .
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    DEVELOPMENT_TEAM: DVJ6Z5343U
+targets:
+  ThoxUSBLab:
+    type: application
+    platform: iOS
+    sources:
+      - ThoxUSBLab
+    dependencies:
+      - package: THOXWire
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ai.thox.thoxos.usblab
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: ThoxOS USB Lab
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+        INFOPLIST_KEY_NSLocalNetworkUsageDescription: Connect to your paired THOX device for explicitly selected document tasks.
+        CURRENT_PROJECT_VERSION: "1"
+        MARKETING_VERSION: "0.1.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_STYLE: Automatic
+schemes:
+  ThoxUSBLab:
+    build:
+      targets:
+        ThoxUSBLab: all
+    run:
+      config: Debug

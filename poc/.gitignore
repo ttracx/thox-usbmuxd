@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+.build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.key
+*.sqlite3*
+workspace/

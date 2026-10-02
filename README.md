@@ -1,159 +1,147 @@
-# usbmuxd
+# THOX USB connection POC
 
-*A socket daemon to multiplex connections from and to iOS devices.*
+![Status: experimental](https://img.shields.io/badge/status-experimental-orange)
+![POC version: v0.1.0](https://img.shields.io/badge/POC-v0.1.0-10B981)
+![Target: ThoxMini and iOS](https://img.shields.io/badge/target-ThoxMini_%2B_iOS-10B981)
+![Validation: local and bench](https://img.shields.io/badge/validation-local_%2B_bench-64748B)
 
-![build](https://github.com/libimobiledevice/usbmuxd/actions/workflows/build.yml/badge.svg)
+An experimental fork of [libimobiledevice/usbmuxd](https://github.com/libimobiledevice/usbmuxd) with a THOX companion prototype under [`poc/`](poc/). It explores a wired workflow in which ThoxOS on iOS submits work to ThoxMini and retrieves persistent results.
 
-## Features
+**Delivery scope:** a Linux/Python connection agent, authenticated and encrypted application protocol, SQLite job storage, and a standalone SwiftUI iOS companion source project. The initial workload reports deterministic text statistics and a SHA-256 digest. An optional operator-configured local OpenAI-compatible endpoint can provide real inference when separately installed and qualified.
 
-usbmuxd stands for "USB multiplexing daemon". This daemon is in charge of
-multiplexing connections over USB to an iOS device.
+**Validation boundary:** local software checks do not prove USB connectivity, iOS compilation, phone compatibility, or model performance. Signed iOS distribution, TestFlight upload, and integration into the existing ThoxOS application are separate milestones. Track physical-device evidence in the [bench checklist](poc/docs/BENCH_VALIDATION.md).
 
-To users, it means you can use various applications to interact with your
-device.
+## Connection direction
 
-To developers, it means you can connect to any listening localhost socket on
-the device.
+ThoxMini is the USB host. Its connection agent opens a TCP connection through `iproxy` to a listener inside the foreground iOS app. Once authenticated, the iOS app submits requests over that connection and Mini sends responses.
 
-Some key features are:
-
-- **Implementation**: Open-Source implementation of proprietary usbmuxd daemon
-- **Cross-Platform:** Tested on Linux, macOS, Windows and Android platforms
-- **Linux**: Supports udev and systemd for automatic activation
-- **Compatibility**: Supports latest device firmware releases
-- **Scalability**: Supports multiple connections to different ports in parallel
-
-usbmuxd is not used for tethering data transfers which uses a dedicated USB
-interface to act as a virtual network device.
-
-The higher-level layers, especially if you want to write an application to
-interact with the device, are handled by [libimobiledevice](https://github.com/libimobiledevice/libimobiledevice.git).
-
-The low-level layer is handled by [libusbmuxd](https://github.com/libimobiledevice/libusbmuxd.git).
-
-## Installation / Getting started
-
-### Debian / Ubuntu Linux
-
-First install all required dependencies and build tools:
-```shell
-sudo apt-get install \
-	build-essential \
-	pkg-config \
-	checkinstall \
-	git \
-	autoconf \
-	automake \
-	libtool-bin \
-	libplist-dev \
-	libusbmuxd-dev \
-	libimobiledevice-dev \
-	libimobiledevice-glue-dev \
-	libusb-1.0-0-dev \
-	udev
+```mermaid
+flowchart TD
+    UI["ThoxOS iOS companion POC"] -->|"Requests after authentication"| Link["Encrypted application session"]
+    Mini["ThoxMini connection agent"] -->|"Initiates through iproxy"| Link
+    Mini --> Jobs["Persistent job store"]
+    Jobs --> Stats["Text statistics"]
+    Jobs --> Model["Optional local model endpoint"]
 ```
 
-If systemd is not installed and should control spawning the daemon use:
-```shell
-sudo apt-get install \
-	systemd
-```
+`usbmuxd` provides transport to the iPhone; it does not automatically expose Mini's HTTP API to an iPhone client. The POC uses its own bidirectional application protocol. USBMux is an experimental dependency here; see [architecture and constraints](poc/docs/ARCHITECTURE.md).
 
-Then clone the actual project repository:
-```shell
-git clone https://github.com/libimobiledevice/usbmuxd.git
-cd usbmuxd
-```
+## Build the standalone iOS companion
 
-Now you can build and install it:
-```shell
-./autogen.sh
-make
-sudo make install
-```
+On a Mac with Xcode, build the included project:
 
-If you require a custom prefix or other option being passed to `./configure`
-you can pass them directly to `./autogen.sh` like this:
 ```bash
-./autogen.sh --prefix=/opt/local --without-preflight --without-systemd
-make
-sudo make install
+xcodebuild -project poc/ios/ThoxUSBLab.xcodeproj \
+  -scheme ThoxUSBLab \
+  -destination 'generic/platform=iOS Simulator' \
+  CODE_SIGNING_ALLOWED=NO build
 ```
 
-To output a list of available configure options use:
+The development bundle identifier is `ai.thox.thoxos.usblab`, separate from the existing ThoxOS app. For a real phone, open the project in Xcode, select an authorized development team and device, then build/install normally. A simulator build checks compilation; physical USB tests require the signed app on a phone.
+
+In the companion, enter the standard-base64 32-byte pairing key, choose **Save key**, then **Start USB listener**. The listener uses `127.0.0.1:49321`. Keep the app in the foreground. Select a plain-text document of at most 65,536 UTF-8 bytes or enter text, then use the analysis/job controls after the connection is ready.
+
+## Start on the Mini/Linux side
+
+On a Debian/Raspberry Pi OS image with the listed packages available, run the following from a private operator terminal. The final command displays the new pairing key for manual import:
+
 ```bash
-./autogen.sh --help
+sudo apt update
+sudo apt install usbmuxd libimobiledevice-utils libusbmuxd-tools python3-venv
+python3 -m venv .venv
+. .venv/bin/activate
+python3 -m pip install -r poc/host/requirements.txt
+PYTHONPATH=poc/host python3 -m thox_usb pair --output "$HOME/.config/thox-usb/pair.key" --reveal
 ```
 
-## Usage
+Without `--reveal`, the pairing command prints only the key-file path. Provision the displayed base64 key into the companion app through its pairing UI. Keep it private. The same secret authenticates both ends and must never be committed, logged, or included in a bug report. This application pairing is distinct from Apple's device trust/pairing.
 
-The daemon is automatically started by udev or systemd depending on what you
-have configured upon hotplug of an iOS device and exits if the last device
-was unplugged.
+Connect the unlocked iPhone using a qualified data cable and correct USB host/power arrangement. Follow any system Trust prompt and keep the companion app in the foreground. Identify the exact connected device:
 
-When usbmuxd is running it provides a socket interface at `/var/run/usbmuxd`
-that is designed to be compatible with the socket interface that is provided
-on macOS.
-
-You should also create an `usbmux` user that has access to USB devices on your
-system. Alternatively, just pass a different username using the `-U` argument.
-
-The daemon also manages pairing records with iOS devices and the host in
-`/var/lib/lockdown` (Linux) or `/var/db/lockdown` (macOS).
-
-Ensure proper permissions are setup for the daemon to access the directory.
-
-For debugging purposes it is helpful to start usbmuxd using the foreground `-f`
-argument and enable verbose mode `-v` to get suitable logs.
-
-Please consult the usage information or manual page for a full documentation of
-available command line options:
-```shell
-usbmuxd --help
-man usbmuxd
+```bash
+idevice_id -l
 ```
 
-## Contributing
+In one terminal, replace `YOUR_IPHONE_UDID` with the device you intend to connect:
 
-We welcome contributions from anyone and are grateful for every pull request!
+```bash
+iproxy -u YOUR_IPHONE_UDID 49322:49321
+```
 
-If you'd like to contribute, please fork the `master` branch, change, commit and
-send a pull request for review. Once approved it can be merged into the main
-code base.
+In a second terminal from the repository root:
 
-If you plan to contribute larger changes or a major refactoring, please create a
-ticket first to discuss the idea upfront to ensure less effort for everyone.
+```bash
+. .venv/bin/activate
+mkdir -m 700 -p "$HOME/thox-usb-workspace"
+PYTHONPATH=poc/host python3 -m thox_usb bridge \
+  --pair-key "$HOME/.config/thox-usb/pair.key" \
+  --workspace "$HOME/thox-usb-workspace" \
+  --host 127.0.0.1 \
+  --port 49322
+```
 
-Please make sure your contribution adheres to:
-* Try to follow the code style of the project
-* Commit messages should describe the change well without being too short
-* Try to split larger changes into individual commits of a common domain
-* Use your real name and a valid email address for your commits
+Use a dedicated workspace owned by the service operator. The host rejects a directory accessible by other users. `mkdir -m 700` applies to a new directory; for an existing dedicated directory, set its mode with `chmod 700 "$HOME/thox-usb-workspace"` before starting the bridge.
 
-We are still working on the guidelines so bear with us!
+The forwarding listener must remain restricted to loopback. Do not enable a public `iproxy` bind. Check the installed `iproxy --help` if its option syntax differs. The explicit UDID prevents selecting another connected phone by accident.
 
-## Links
+Use the companion to check device status, submit text for analysis, and retrieve or cancel the returned job. Disconnect and reconnect to check that Mini retains the result. Full protocol and operation limits are specified in [`poc/PROTOCOL.md`](poc/PROTOCOL.md).
 
-* Homepage: https://libimobiledevice.org/
-* Repository: https://github.com/libimobiledevice/usbmuxd.git
-* Repository (Mirror): https://git.libimobiledevice.org/usbmuxd.git
-* Issue Tracker: https://github.com/libimobiledevice/usbmuxd/issues
-* Mailing List: https://lists.libimobiledevice.org/mailman/listinfo/libimobiledevice-devel
-* Twitter: https://twitter.com/libimobiledev
+## Optional real inference
 
-## License
+The default analysis mode does not run a language model. To enable inference, start and qualify a local compatible server on Mini, then add its fixed endpoint and model identifier to the bridge command:
 
-This library and utilities are licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html),
-also included in the repository in the `COPYING.GPLv3` file.
+```bash
+PYTHONPATH=poc/host python3 -m thox_usb bridge \
+  --pair-key "$HOME/.config/thox-usb/pair.key" \
+  --workspace "$HOME/thox-usb-workspace" \
+  --host 127.0.0.1 \
+  --port 49322 \
+  --inference-url http://127.0.0.1:8080/v1/chat/completions \
+  --model YOUR_INSTALLED_MODEL_ID
+```
 
-## Credits
+The endpoint must use a literal loopback address; the iOS caller cannot override it. Model files, runtime installation, and model suitability are outside this fork. Storage capacity does not establish sufficient memory or acceptable inference speed.
 
-The initial usbmuxd daemon implementation was authored by Hector Martin.
+## Validate locally
 
-Apple, iPhone, iPad, iPod, iPod Touch, Apple TV, Apple Watch, Mac, iOS,
-iPadOS, tvOS, watchOS, and macOS are trademarks of Apple Inc.
+Run the actual Python bridge against a simulated iOS protocol peer, submit a
+document, disconnect, and recover its result over a new encrypted connection:
 
-usbmuxd is an independent software application and has not been
-authorized, sponsored, or otherwise approved by Apple Inc.
+```bash
+python3 poc/scripts/demo.py
+```
 
-README Updated on: 2024-12-02
+This demo uses loopback networking and a temporary private workspace. It does
+not exercise usbmuxd, a phone, or a model. Then run the automated suite:
+
+```bash
+. .venv/bin/activate
+PYTHONPATH=poc/host python3 -m unittest discover -s poc/tests -v
+```
+
+Local tests and build checks are run by an operator; this fork adds no GitHub Actions workflow. A test result must record the command, environment, and tested commit. See [handoff](poc/docs/HANDOFF.md) for the remaining release gates.
+
+## Project map
+
+| Resource | Purpose |
+|---|---|
+| [`poc/PROTOCOL.md`](poc/PROTOCOL.md) | Framing, authentication, encryption, job operations |
+| [`poc/ios/`](poc/ios/) | Standalone iOS source project and native build details |
+| [`poc/docs/ARCHITECTURE.md`](poc/docs/ARCHITECTURE.md) | System boundaries, hardware roles, iOS constraints |
+| [`poc/docs/BENCH_VALIDATION.md`](poc/docs/BENCH_VALIDATION.md) | Physical qualification checklist and evidence record |
+| [`poc/docs/HANDOFF.md`](poc/docs/HANDOFF.md) | Build, integration, and operating handoff |
+| [`ecosystem_map.md`](ecosystem_map.md) | Relationship to ThoxOS, MeshStack, and ThoxBeam |
+| [`mvp_catalog.md`](mvp_catalog.md) | Proposed vertical slices and weighted priorities |
+| [`development_queue.md`](development_queue.md) | Delivery state and next tasks |
+
+## Upstream and licensing
+
+The fork starts from upstream commit `3ded00c9985a5108cfc7591a309f9a23d57a8cba`. The original [upstream README](README.upstream.md) is preserved.
+
+Upstream `usbmuxd` code and notices remain under their original licenses. THOX POC additions are GPL-3.0-or-later; this does not replace or relicense upstream files. Review the preserved upstream licensing files before redistribution. This fork is not affiliated with or endorsed by Apple or the libimobiledevice project.
+
+© 2026 THOX.ai LLC. All rights reserved, subject to applicable licenses.  
+THOX.ai™ and THOX product names and logos are trademarks of THOX.ai LLC.  
+Other marks belong to their respective owners.
+
+Your AI. Your Data. Your Rules.™

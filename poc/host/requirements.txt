@@ -1,0 +1,2 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+cryptography==46.0.0
